@@ -1,15 +1,13 @@
 <template>
   <div>
     <b-navbar toggleable="lg">
-      <b-navbar-brand href="#">Provincias</b-navbar-brand>
+      <b-navbar-brand href="#">{{tituloEnMayusculas}}</b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
-          <a href="/" class="nav-link"> HOME </a>
-          <a href="/con-puerto" class="nav-link"> Provincias con puerto </a>
-          <a href="/mapa-argentina" class="nav-link"> Mapa Argentina </a>
+          <a href="/" class="nav-link"> Home </a>
         </b-navbar-nav>
 
         <b-navbar-nav class="ml-auto">
@@ -47,6 +45,7 @@
 
     data() {
       return {
+      titulo:'alumnos', //para propiedad computada de ejemplo
       legajo:null,
       nombre:''
       }
@@ -60,5 +59,15 @@
         //this.$emit('buscar', { busqueda: this.busqueda })
       }//buscar
     }//methods:
+    ,
+    computed:{
+
+      //Se ejecuta solo cuando cambia titulo, las puedo usar como funcion poniendole los parentesis, pero como funciones se ejecutan mas veces
+      tituloEnMayusculas: function(){ //Ejemplo de propiedad computada, transformando siempre titulo a mayusculas. Siempre estará observando la propiedad titulo y cambiandola, cuando cambie su valor
+    return this.titulo.toUpperCase()
+      }
+    
+      
+    }
   }//export default
 </script>

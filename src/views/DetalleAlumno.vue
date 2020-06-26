@@ -35,13 +35,13 @@
        <tr>
         <th>Notas:</th>
         <td>
-        <ul v-for="(nota,index) in alumnoEncontrado.notas" :key="index">
-        <li >{{nota}}</li>
+        <ul >
+        <li v-for="(nota,index) in alumnoEncontrado.notas" :key="index" >{{nota}}</li>
         </ul></td>
       </tr>
 <tr>    
         <th>Promedio:</th>
-        <td>{{promedio}}</td>
+        <td>{{getPromedio(alumnoEncontrado.notas)}}</td>
       </tr>
       <tr>
         <td>
@@ -56,48 +56,56 @@
 
 <script>
 import MenuSuperiorOpciones from "@/components/shared/MenuSuperiorOpciones.vue";
-export default {
+ export default {
   name: "DetalleAlumno",
   props: [],
   components: {
     "menu-superior": MenuSuperiorOpciones,
   }, //components
 
-  mounted() {
-    this.getAlumnoXLegajo();
+  async mounted() {  
+this.parametroLegajo = this.$route.params.legajo;
+     //Es necesario el await aca, sino alumnoEncontrado va a ser undefined, primero debe obtener la data y despues buscar
+  await this.obtenerData()
+if(this.parametroLegajo==1){
+  alert('merjor promedio')
+}else{
+  this.getAlumnoXLegajo();
+
+}
+     
+ 
   }, //mounted()
 
   data() {
     return {
-      alumnoEncontrado:null,
-      promedio:0
+      parametroLegajo:null,
+      alumnos:[],
+      alumnoEncontrado:null
     };
   }, //data()
 
   methods: {
-    async getAlumnoXLegajo() {
-      const parametroLegajo = Number(this.$route.params.legajo);
-      const res = await fetch("/alumnos.json");
-      const resJson = await res.json();
-
-      if(Number(parametroLegajo)==1){
-alert('mejor promedio')
-      }else{
-      this.alumnoEncontrado = await resJson.find(
-        (alumno) => Number(alumno.legajo) == Number(parametroLegajo)
-      );
-this.promedio = this.alumnoEncontrado.notas.reduce((anterior,actual)=>{
-    return parseFloat(anterior+actual);
-})
-
-this.promedio=this.promedio/this.alumnoEncontrado.notas.length;
-      }
-
+    async obtenerData(){
+   const res = await fetch("/alumnos.json");
+   this.alumnos = await res.json();
 
     },
+   async getAlumnoXLegajo() {
+      this.alumnoEncontrado = await this.alumnos.find(
+        alumno => alumno.legajo == this.parametroLegajo
+      );
+    },
+//Elegir cuando sea necesario asyn await, sino va a mostarr object object por ejemplo al usarlo en el metodo generar promedio
+// La Conversión a Number(num) es solo necesaria si el dato del json es un string. Parsefloat() no es necesaria en este caso tampoco
+     getPromedio(notas){
+     let promedio = notas.reduce((anterior,actual)=>
+   anterior+actual
+)
 
-    async getPromedio(){
-this.promedio=2
+promedio=promedio/notas.length;
+
+return promedio;
     }
   }, //methods:
 }; //export default

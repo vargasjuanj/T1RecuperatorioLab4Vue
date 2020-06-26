@@ -1,4 +1,9 @@
-# repaso-vue-provincias-json
+
+# CRUD DE CONSULTA
+
+https://github.com/naufalafif/vue-crud-example
+
+Propiedades Computadas: https://www.youtube.com/watch?v=gcQyOXSxA0U
 
 ## Project setup
 ```

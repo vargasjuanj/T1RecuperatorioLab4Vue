@@ -1,11 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import GrillaAlumnos from '../views/GrillaAlumnos.vue'
-import DetalleAlumno from '../views/DetalleAlumno.vue'
 Vue.use(VueRouter)
 
   const routes = [
-  {
+  {//carga inmediata, eager
     path: '/',
     name: 'GrillaAlumnos',
     component: GrillaAlumnos
@@ -15,12 +14,12 @@ Vue.use(VueRouter)
     name: 'GrillaAlumnos',
     component: GrillaAlumnos
   },
-  {
+  { //carga lazy o perezosa del componente, solo cuando se requiere
     path: '/detalle-alumno/:legajo',
     name: 'DetalleAlumno',
-    component: DetalleAlumno
+    component: () => import('../views/DetalleAlumno.vue')
   }
-
+ 
 
 ]
 
