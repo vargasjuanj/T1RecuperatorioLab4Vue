@@ -7,10 +7,16 @@ Vue.use(VueRouter)
   {//carga inmediata, eager
     path: '/',
     name: 'GrillaAlumnos',
-    component: GrillaAlumnos
+    component: GrillaAlumnos,
+    
   },
   {
     path: '/grilla-alumnos/:legajo',
+    name: 'GrillaAlumnos',
+    component: GrillaAlumnos
+  },
+  {
+    path: '/grilla-alumnos/por-nombre/:nombre',  //para que no se choquen los dos parametros se extiende la ruta pra poder usarlo con windows.includes location
     name: 'GrillaAlumnos',
     component: GrillaAlumnos
   },

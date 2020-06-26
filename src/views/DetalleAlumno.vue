@@ -64,11 +64,13 @@ import MenuSuperiorOpciones from "@/components/shared/MenuSuperiorOpciones.vue";
   }, //components
 
   async mounted() {  
-this.parametroLegajo = this.$route.params.legajo;
+this.parametroLegajo = this.$route.params.legajo
      //Es necesario el await aca, sino alumnoEncontrado va a ser undefined, primero debe obtener la data y despues buscar
-  await this.obtenerData()
 if(this.parametroLegajo==1){
-  alert('merjor promedio')
+  alert('mejor alumno')
+  this.mejorAlumno()
+  //alert('peor alumno')
+ // this.peorAlumno()
 }else{
   this.getAlumnoXLegajo();
 
@@ -86,12 +88,13 @@ if(this.parametroLegajo==1){
   }, //data()
 
   methods: {
-    async obtenerData(){
+    async getAlumnos(){
    const res = await fetch("/alumnos.json");
    this.alumnos = await res.json();
 
     },
    async getAlumnoXLegajo() {
+       await this.getAlumnos()
       this.alumnoEncontrado = await this.alumnos.find(
         alumno => alumno.legajo == this.parametroLegajo
       );
@@ -101,11 +104,41 @@ if(this.parametroLegajo==1){
      getPromedio(notas){
      let promedio = notas.reduce((anterior,actual)=>
    anterior+actual
+
 )
 
 promedio=promedio/notas.length;
 
 return promedio;
+    },
+    async mejorAlumno(){
+             await this.getAlumnos()
+
+      let promedioActual=0, promedioAnterior=0
+     await this.alumnos.forEach((alumno)=>{
+        promedioActual=this.getPromedio(alumno.notas)
+        if(promedioAnterior<promedioActual){
+          promedioAnterior=promedioActual
+          this.alumnoEncontrado=alumno
+        }
+      })
+
+    },
+
+    
+      async  peorAlumno(){
+               await this.getAlumnos()
+      let promedioActual=0
+    let  promedioAnterior= this.getPromedio(this.alumnos[0].notas)
+    for (let i=1; i<this.alumnos.length; i++){
+        promedioActual=this.getPromedio(this.alumnos[i].notas)
+        if(promedioActual<promedioAnterior){
+          promedioAnterior=promedioActual
+          this.alumnoEncontrado=this.alumnos[i]
+        }
+    }
+ 
+
     }
   }, //methods:
 }; //export default

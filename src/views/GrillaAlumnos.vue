@@ -43,16 +43,23 @@ export default {
 
   async mounted( ) {
  this.parametroLegajo= this.$route.params.legajo;
- await this.getAlumnos()
-if(this.parametroLegajo != null){
-  alert('por legajo')
-await this.filtrarPorLegajo()
+this.parametroNombre= this.$route.params.nombre;
 
-}
+if(this.parametroLegajo != null){ //comparandolo con cero no estaria funcionando, por mas q se cambie en menuopciones y end ata
+  alert('por legajo')
+this.filtrarPorLegajo()
+}else if(window.location.href.includes("por-nombre")) {
+      alert('filtrando por nombres')
+this.filtrarPorCoincidenciasDeNombres ()
+   }else{
+     this.getAlumnos()
+   }
+
   }, //mounted()
   data() {
     return {
       parametroLegajo:null,
+      parametroNombre:null,
               alumnos: []
              // mejor:0
     };
@@ -62,13 +69,8 @@ await this.filtrarPorLegajo()
    async getAlumnos(){
      const res = await fetch("/alumnos.json")
       this.alumnos= await res.json()
-    },
-     async  filtrarPorLegajo(){
- this.alumnos = await this.alumnos.filter(alumno=>        
-   alumno.legajo ==this.parametroLegajo
-   );  
- }               
-,
+    },             
+
  getPromedio(notas){
      let promedio =  notas.reduce((anterior,actual)=>
  anterior+actual
@@ -78,6 +80,22 @@ promedio= promedio/notas.length
   //  this.mejor=promedio;
 //}
 return promedio
+  },
+       async  filtrarPorLegajo(){
+          await this.getAlumnos()
+ this.alumnos = await this.alumnos.filter(alumno=>        
+   alumno.legajo ==this.parametroLegajo
+   );  
+ }  
+  ,
+  async filtrarPorCoincidenciasDeNombres (){
+ await this.getAlumnos()
+    this.alumnos= await this.alumnos.filter(alumno=>
+        alumno.alumno.toLowerCase().includes(this.parametroNombre.toLowerCase())
+    )
+
+    
+
   }
   //methods:
   }, //methods:
